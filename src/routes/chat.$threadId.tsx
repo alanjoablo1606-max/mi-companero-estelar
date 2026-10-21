@@ -282,7 +282,7 @@ function ChatWindow({ threadId, initial }: { threadId: string; initial: UIMessag
                   const out = tp.state === "output-available" ? tp.output : undefined;
                   let card: React.ReactNode = null;
                   if (out?.ok) {
-                    if (tp.type === "tool-generate_image") card = <ImageCard path={out.path ?? ""} prompt={out.prompt} />;
+                    if (tp.type === "tool-generate_image") card = <ImageCard path={out.path ?? ""} prompt={out.prompt ?? ""} />;
                     if (tp.type === "tool-create_document") card = <DocumentCard title={out.title ?? ""} content={out.content ?? ""} />;
                     if (tp.type === "tool-open_website") card = <WebsiteCard name={out.name ?? ""} url={out.url ?? ""} />;
                     if (tp.type === "tool-add_task" || tp.type === "tool-complete_task") card = <TaskChip output={out} />;
