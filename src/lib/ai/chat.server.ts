@@ -2,7 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createClient } from "@supabase/supabase-js";
 import { convertToModelMessages, stepCountIs, streamText, tool, type UIMessage } from "ai";
 import { z } from "zod/v4";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 import {
   createLovableAiGatewayRunIdFetch,
   getLovableAiGatewayRunId,
@@ -37,9 +37,9 @@ Herramientas:
 Tras usar una herramienta, confirma brevemente el resultado sin repetir todo el contenido.`;
 
 export async function handleChat(request: Request) {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
+  const SUPABASE_URL = process.env["SUPABASE_URL"];
+  const SUPABASE_KEY = process.env["SUPABASE_PUBLISHABLE_KEY"];
   if (!apiKey || !SUPABASE_URL || !SUPABASE_KEY) return json(500, "Configuración incompleta del servidor");
 
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -181,7 +181,7 @@ export async function handleChat(request: Request) {
     sendReasoning: true,
     onFinish: async ({ messages: finalMessages }) => {
       const update: Database["public"]["Tables"]["threads"]["Update"] = {
-        messages: finalMessages as unknown as Database["public"]["Tables"]["threads"]["Update"]["messages"],
+        messages: finalMessages as unknown as Json,
         updated_at: new Date().toISOString(),
       };
       if (thread.title === "Nueva conversación" && firstText) update.title = firstText.slice(0, 60);

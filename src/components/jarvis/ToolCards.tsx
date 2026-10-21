@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MessageResponse } from "@/components/ai-elements/message";
 
-type Out = Record<string, unknown> & { ok?: boolean; error?: string };
+type Out = { ok?: boolean; error?: string; task?: { title?: string } };
 
 export function ImageCard({ path, prompt }: { path: string; prompt?: string }) {
   const { data: url } = useQuery({
@@ -52,7 +52,7 @@ function mdToHtml(md: string) {
     .map((block) => {
       const b = esc(block).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>");
       const h = b.match(/^(#{1,3})\s+(.*)/);
-      if (h) return `<h${h[1].length}>${h[2]}</h${h[1].length}>`;
+      if (h?.[1] && h[2]) return `<h${h[1].length}>${h[2]}</h${h[1].length}>`;
       if (/^[-*]\s/m.test(b)) return `<ul>${b.split("\n").map((l) => `<li>${l.replace(/^[-*]\s/, "")}</li>`).join("")}</ul>`;
       return `<p>${b.replace(/\n/g, "<br/>")}</p>`;
     })
@@ -104,7 +104,7 @@ export function WebsiteCard({ name, url }: { name: string; url: string }) {
 }
 
 export function TaskChip({ output }: { output: Out }) {
-  const task = output.task as { title?: string } | undefined;
+  const task = output.task;
   if (!task?.title) return null;
   return (
     <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm">

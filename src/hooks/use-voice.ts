@@ -38,8 +38,10 @@ export function useVoiceInput(onFinal: (text: string) => void) {
       let live = "";
       for (let i = 0; i < e.results.length; i++) {
         const r = e.results[i];
-        if (r.isFinal) finalText += r[0].transcript;
-        else live += r[0].transcript;
+        const t = r?.[0]?.transcript ?? "";
+        if (!r) continue;
+        if (r.isFinal) finalText += t;
+        else live += t;
       }
       setInterim(finalText + live);
     };

@@ -170,6 +170,8 @@ function Sidebar({ activeId, userId }: { activeId: string; userId: string }) {
   );
 }
 
+type ToolOut = { ok?: boolean; error?: string; path?: string; prompt?: string; title?: string; content?: string; name?: string; url?: string; task?: { title?: string } };
+
 const SUGGESTIONS = [
   "Recuérdame llamar al dentista mañana a las 10",
   "Escribe una carta de renuncia formal",
@@ -274,15 +276,15 @@ function ChatWindow({ threadId, initial }: { threadId: string; initial: UIMessag
                     type: `tool-${string}`;
                     state: "input-streaming" | "input-available" | "output-available" | "output-error";
                     input?: unknown;
-                    output?: Record<string, unknown>;
+                    output?: ToolOut;
                     errorText?: string;
                   };
                   const out = tp.state === "output-available" ? tp.output : undefined;
                   let card: React.ReactNode = null;
                   if (out?.ok) {
-                    if (tp.type === "tool-generate_image") card = <ImageCard path={out.path as string} prompt={out.prompt as string} />;
-                    if (tp.type === "tool-create_document") card = <DocumentCard title={out.title as string} content={out.content as string} />;
-                    if (tp.type === "tool-open_website") card = <WebsiteCard name={out.name as string} url={out.url as string} />;
+                    if (tp.type === "tool-generate_image") card = <ImageCard path={out.path ?? ""} prompt={out.prompt} />;
+                    if (tp.type === "tool-create_document") card = <DocumentCard title={out.title ?? ""} content={out.content ?? ""} />;
+                    if (tp.type === "tool-open_website") card = <WebsiteCard name={out.name ?? ""} url={out.url ?? ""} />;
                     if (tp.type === "tool-add_task" || tp.type === "tool-complete_task") card = <TaskChip output={out} />;
                   }
                   return (
