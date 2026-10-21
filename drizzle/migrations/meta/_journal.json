@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792626216728,
+      "tag": "0000_jarvis_core",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792626234845,
+      "tag": "0001_jarvis_images_policies",
+      "breakpoints": true
+    }
+  ]
+}
