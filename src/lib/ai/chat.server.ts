@@ -8,6 +8,7 @@ import {
   getLovableAiGatewayRunId,
   withLovableAiGatewayRunIdHeader,
 } from "./run-id.server";
+import { connectedGoogleEmail, googleTools } from "./google-tools.server";
 
 const GATEWAY = "https://ai.gateway.lovable.dev";
 const CHAT_MODEL = "openai/gpt-6-astra";
@@ -33,7 +34,8 @@ Herramientas:
 - Tareas y recordatorios: usa add_task, list_tasks y complete_task. Convierte fechas relativas ("mañana a las 9") a ISO 8601 con zona horaria de Ciudad de México.
 - generate_image: cuando pidan crear, dibujar o generar una imagen.
 - create_document: cuando pidan redactar un documento, carta, resumen, informe, etc. Escribe el contenido completo en Markdown.
-- open_website: cuando pidan abrir una app o sitio (YouTube, Spotify, Gmail, Maps...). Usa la URL web oficial. No puedes abrir programas instalados en la computadora; abre su versión web.
+- open_website: cuando pidan abrir una app o sitio. Usa la URL web oficial. Para poner música o videos usa búsquedas directas: YouTube "https://www.youtube.com/results?search_query=<texto>", Spotify "https://open.spotify.com/search/<texto>". No puedes abrir programas instalados en la computadora; abre su versión web.
+- Gmail y Google Calendar (si están disponibles): gmail_search, gmail_read, gmail_send, calendar_list, calendar_create. ANTES de gmail_send muestra el borrador (para, asunto, texto) y espera un "sí" explícito. Para agendar en el calendario usa calendar_create (no add_task) cuando pidan citas o eventos.
 Tras usar una herramienta, confirma brevemente el resultado sin repetir todo el contenido.`;
 
 export async function handleChat(request: Request) {
@@ -51,6 +53,7 @@ export async function handleChat(request: Request) {
   });
   const { data: claims, error: claimsError } = await supabase.auth.getClaims(token);
   const userId = claims?.claims?.sub;
+  const userEmail = (claims?.claims?.email as string | undefined)?.toLowerCase();
   if (claimsError || !userId) return json(401, "Sesión no válida");
 
   let body: { messages?: UIMessage[]; threadId?: string };
@@ -154,11 +157,15 @@ export async function handleChat(request: Request) {
     }),
   };
 
+  // Google tools act on the account connected to this project: only its owner may use them.
+  const googleEmail = userEmail ? await connectedGoogleEmail() : null;
+  const allTools = googleEmail && googleEmail === userEmail ? { ...tools, ...googleTools } : tools;
+
   const result = streamText({
     model: provider.responses(CHAT_MODEL),
     instructions: SYSTEM(new Date().toISOString()),
     messages: await convertToModelMessages(messages),
-    tools,
+    tools: allTools,
     stopWhen: stepCountIs(10),
     abortSignal: request.signal,
     providerOptions: {
