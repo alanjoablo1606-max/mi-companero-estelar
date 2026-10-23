@@ -29,10 +29,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/chat/$threadId")({
   head: () => ({
     meta: [
-      { title: "Conversación — Jarvis" },
-      { name: "description", content: "Conversa con Jarvis por voz o texto." },
-      { property: "og:title", content: "Conversación — Jarvis" },
-      { property: "og:description", content: "Conversa con Jarvis por voz o texto." },
+      { title: "Conversación — Orbix" },
+      { name: "description", content: "Conversa con Orbix por voz o texto." },
+      { property: "og:title", content: "Conversación — Orbix" },
+      { property: "og:description", content: "Conversa con Orbix por voz o texto." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -122,7 +122,7 @@ function Sidebar({ activeId, userId }: { activeId: string; userId: string }) {
     <aside className="hidden w-72 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground md:flex">
       <div className="flex items-center gap-3 px-5 py-6">
         <Orb className="size-7" />
-        <span className="font-display text-2xl">Jarvis</span>
+        <span className="font-display text-2xl">Orbix</span>
       </div>
       <div className="px-3">
         <Button variant="outline" className="w-full justify-start" onClick={() => create.mutate()}>
@@ -317,7 +317,7 @@ function ChatWindow({ threadId, initial }: { threadId: string; initial: UIMessag
             autoFocus
             value={voice.listening ? voice.interim : text}
             onChange={(e) => setText(e.target.value)}
-            placeholder={voice.listening ? "Escuchando…" : "Escriba a Jarvis…"}
+            placeholder={voice.listening ? "Escuchando…" : "Escriba a Orbix…"}
           />
           <PromptInputFooter>
             <PromptInputTools>

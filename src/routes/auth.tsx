@@ -11,10 +11,10 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — Jarvis" },
-      { name: "description", content: "Inicia sesión en tu asistente personal Jarvis." },
-      { property: "og:title", content: "Entrar — Jarvis" },
-      { property: "og:description", content: "Inicia sesión en tu asistente personal Jarvis." },
+      { title: "Entrar — Orbix" },
+      { name: "description", content: "Inicia sesión en tu asistente personal Orbix." },
+      { property: "og:title", content: "Entrar — Orbix" },
+      { property: "og:description", content: "Inicia sesión en tu asistente personal Orbix." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -65,26 +65,26 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <Orb className="mx-auto mb-10 size-24" />
-        <h1 className="font-display text-center text-5xl">Jarvis</h1>
-        <p className="mt-2 text-center text-sm text-muted-foreground">Tu asistente personal, siempre a la mano.</p>
+        <Orb className="mx-auto mb-4 size-48" />
+        <h1 className="font-display text-center text-5xl font-semibold">Orbix</h1>
+        <p className="mt-2 text-center text-sm text-muted-foreground">Tu compañero estelar, siempre a tu lado.</p>
         <form onSubmit={submit} className="mt-10 space-y-3">
-          <Input type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-          <Button type="submit" className="w-full" disabled={busy}>
-            {mode === "in" ? "Entrar" : "Crear cuenta"}
+          <Input aria-label="Correo" className="h-12 bg-card/40 focus-visible:shadow-[var(--shadow-glow)]" type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input aria-label="Contraseña" className="h-12 bg-card/40 focus-visible:shadow-[var(--shadow-glow)]" type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+          <Button type="submit" className="h-12 w-full" disabled={busy}>
+            {busy ? "Conectando…" : mode === "in" ? "Entrar" : "Crear cuenta"}
           </Button>
         </form>
         <Button variant="outline" className="mt-3 w-full" onClick={google}>
           Continuar con Google
         </Button>
-        <button
+        <Button variant="link"
           type="button"
           onClick={() => setMode(mode === "in" ? "up" : "in")}
           className="mt-6 w-full text-center text-sm text-muted-foreground hover:text-foreground"
         >
           {mode === "in" ? "¿No tienes cuenta? Crear una" : "¿Ya tienes cuenta? Entrar"}
-        </button>
+        </Button>
       </div>
     </main>
   );

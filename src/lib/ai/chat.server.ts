@@ -9,6 +9,7 @@ import {
   withLovableAiGatewayRunIdHeader,
 } from "./run-id.server";
 import { connectedGoogleEmail, googleTools } from "./google-tools.server";
+import { chatErrorMessage } from "./chat-error";
 
 const GATEWAY = "https://ai.gateway.lovable.dev";
 const CHAT_MODEL = "openai/gpt-6-astra";
@@ -26,7 +27,7 @@ function supabaseFetch(key: string): typeof fetch {
   };
 }
 
-const SYSTEM = (now: string) => `Eres JARVIS, un asistente personal elegante, sereno y eficiente. Respondes en el idioma del usuario (por defecto español de México), de forma breve y clara, con un toque de humor británico discreto. Te diriges al usuario como "señor" o "señora" solo ocasionalmente.
+const SYSTEM = (now: string) => `Eres Orbix, tu compañero estelar y asistente personal elegante, sereno y eficiente. Respondes en español de México, de forma breve y clara, con un toque de humor discreto. Te diriges al usuario como "señor" o "señora" solo ocasionalmente.
 
 Fecha y hora actual (UTC): ${now}. El usuario está en la zona horaria America/Mexico_City.
 
@@ -167,6 +168,7 @@ export async function handleChat(request: Request) {
     messages: await convertToModelMessages(messages),
     tools: allTools,
     stopWhen: stepCountIs(10),
+    maxRetries: 0,
     abortSignal: request.signal,
     providerOptions: {
       openai: {
@@ -185,6 +187,7 @@ export async function handleChat(request: Request) {
 
   const response = result.toUIMessageStreamResponse({
     originalMessages: messages,
+    generateMessageId: () => crypto.randomUUID(),
     sendReasoning: true,
     onFinish: async ({ messages: finalMessages }) => {
       const update: Database["public"]["Tables"]["threads"]["Update"] = {
@@ -197,10 +200,7 @@ export async function handleChat(request: Request) {
     },
     onError: (error) => {
       console.error(error);
-      const msg = error instanceof Error ? error.message : String(error);
-      if (/402/.test(msg)) return "Se agotaron los créditos de IA del espacio de trabajo.";
-      if (/429/.test(msg)) return "Demasiadas solicitudes. Intenta de nuevo en un momento.";
-      return "Ocurrió un error al responder.";
+      return chatErrorMessage(error);
     },
   });
   return withLovableAiGatewayRunIdHeader(response, runIdFetch);
