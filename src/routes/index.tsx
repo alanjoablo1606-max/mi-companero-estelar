@@ -7,10 +7,10 @@ import { Orb } from "@/components/jarvis/Orb";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jarvis — Tu asistente personal con IA" },
-      { name: "description", content: "Habla o escribe con Jarvis: conversa, organiza tareas, crea documentos e imágenes." },
-      { property: "og:title", content: "Jarvis — Tu asistente personal con IA" },
-      { property: "og:description", content: "Habla o escribe con Jarvis: conversa, organiza tareas, crea documentos e imágenes." },
+      { title: "Orbix — Tu asistente personal con IA" },
+      { name: "description", content: "Habla o escribe con Orbix: conversa, organiza tareas, crea documentos e imágenes." },
+      { property: "og:title", content: "Orbix — Tu asistente personal con IA" },
+      { property: "og:description", content: "Habla o escribe con Orbix: conversa, organiza tareas, crea documentos e imágenes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
