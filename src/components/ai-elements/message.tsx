@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { cjk } from "@streamdown/cjk";
 import { code } from "@streamdown/code";
 import { math } from "@streamdown/math";
-import { mermaid } from "@streamdown/mermaid";
 import type { UIMessage } from "ai";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes, ReactElement } from "react";
@@ -262,7 +261,7 @@ export const MessageBranchPrevious = ({
 
   return (
     <Button
-      aria-label="Previous branch"
+      aria-label="Respuesta anterior"
       disabled={totalBranches <= 1}
       onClick={goToPrevious}
       size="icon-sm"
@@ -285,7 +284,7 @@ export const MessageBranchNext = ({
 
   return (
     <Button
-      aria-label="Next branch"
+      aria-label="Respuesta siguiente"
       disabled={totalBranches <= 1}
       onClick={goToNext}
       size="icon-sm"
@@ -314,14 +313,16 @@ export const MessageBranchPage = ({
       )}
       {...props}
     >
-      {currentBranch + 1} of {totalBranches}
+      {currentBranch + 1} de {totalBranches}
     </ButtonGroupText>
   );
 };
 
 export type MessageResponseProps = ComponentProps<typeof Streamdown>;
 
-const streamdownPlugins = { cjk, code, math, mermaid };
+// Diagram code remains readable as a code fence without loading graphlib's
+// incompatible browser bundle. Ordinary Markdown, code and math still render.
+const streamdownPlugins = { cjk, code, math };
 
 export const MessageResponse = memo(
   ({ className, ...props }: MessageResponseProps) => (
