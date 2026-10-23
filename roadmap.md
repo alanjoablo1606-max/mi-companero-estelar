@@ -2,6 +2,7 @@
 
 - [ ] Corregir el error al enviar mensajes y verificar conversación con sesión real
 - [ ] Aplicar identidad Orbix y estilo cian holográfico en autenticación, chat e instalación
+- [ ] Aclarar y atender la preferencia de IA para Orbix
 
 - [x] Chat de voz/texto, conversaciones, tareas, imágenes, documentos, abrir sitios
 - [x] Gmail y Google Calendar (solo para la cuenta dueña)
